@@ -21,7 +21,7 @@ Commands to reproduce results in our paper:
 
 If you use our code in your research, please remember to cite our paper:
 
-```latex
+```LaTeX
 @misc{Provodin_PS_CMDP_2022,
   url = {https://arxiv.org/abs/2209.03596},
   author = {Provodin, Danil and Gajane, Pratik and Pechenizkiy, Mykola and Kaptein, Maurits},
