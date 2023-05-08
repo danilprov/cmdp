@@ -57,7 +57,7 @@ def main():
         args.horizon = 200
         G = GridWorld(args=args)
     elif args.env == 'box_gridworld':
-        budget = [0.2]
+        budget = [0.6]
         args._lambda_lr = 0.000165
         args.horizon = 1000
         G = BoxGridWorld(args=args)

@@ -119,7 +119,7 @@ class PSRLTransitions(PSRLOptimistic):
             for a in range(self.num_actions):
                 visitation = self.p_sum[s, a, :].sum()
                 # sample transitions
-                p_hat[s, a, :] = np.random.dirichlet(np.maximum(self.p_sum[s, a, :], 1))
+                p_hat[s, a, :] = np.random.dirichlet(np.maximum(self.p_sum[s, a, :], 0.01))
                 # average reward and costs
                 if visitation > 0:
                     r_hat[s, a] = self.r_sum[s, a] / visitation

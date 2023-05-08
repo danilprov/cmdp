@@ -44,10 +44,10 @@ class LinProgSolver(RLSolver):
             cons_opt_prob += lpSum([mu[s, a] for a in self.Actions]) <= lpSum(
                 [mu[ss, aa] * P[ss, aa, s] for ss, aa in itertools.product(self.States, self.Actions)])
 
-        #cons_opt_prob.solve(PULP_CBC_CMD(msg=0))
-        cons_opt_prob.solve()
+        cons_opt_prob.solve(PULP_CBC_CMD(msg=0))
+        #cons_opt_prob.solve()
         # The status of the solution is printed to the screen
-        print("Status:", LpStatus[cons_opt_prob.status])
+        #print("Status:", LpStatus[cons_opt_prob.status])
         pi_list = self.__get_pi_list__(cons_opt_prob)
         return pi_list
 
@@ -64,7 +64,7 @@ class LinProgSolver(RLSolver):
             pi_list[s, :] = mu_sa / mu_s
 
         # replace nan with 1/|A|, otherwise sample(polisy(s,:)) always returns 0 action
-        # pi_list[np.isnan(pi_list)] = 1 / self.A
+        pi_list[np.isnan(pi_list)] = 1 / self.A
 
         return pi_list
 
