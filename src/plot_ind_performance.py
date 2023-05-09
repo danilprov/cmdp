@@ -65,8 +65,8 @@ if 'box' in folder:
     fast_reward = -0.833333
     opt_cost = 0.6
 
-    XMAX = 1000000
-    n_average = 2000
+    XMAX = 500000
+    n_average = 1000
     text_pos_x = 0
     eps_shift_up = 0.009
     eps_shift_down = 0.013

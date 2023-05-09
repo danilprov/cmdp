@@ -73,7 +73,7 @@ def main():
 
     now = datetime.now()
     date = now.strftime("%Y%m%d%H%M%S")
-    model_dir = f'{args.output_dir}/{date}_{args.env}_{args.map}_{args.rounds}'
+    model_dir = f'{args.output_dir}/{date}_{args.env}_{args.map}_{args.rounds}_{args.bonus_coef}'
     # model_dir = f'{args.output_dir}/{date}_{args.env}_{args.map}_{args.rounds}'
     if not os.path.exists(model_dir):
         print(f'Creating a new model directory: {model_dir}')

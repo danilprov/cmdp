@@ -4,17 +4,36 @@ This repository holds the source code to our paper [An Empirical Evaluation of P
 
 # Reproducibility
 
-Commands to reproduce results in our paper:
+1. create venv
+
+```$ virtualenv myproject source myproject/venv/bin/activate```
+2. clone repository
+
+```$ git clone https://github.com/danilprov/cmdp.git```
+3. install requirements
+
+```$ pip -r requirements.txt```
+
+4. install `arsenal` manually
+
+```
+$ pip install -r https://raw.githubusercontent.com/timvieira/arsenal/master/requirements.txt
+$ pip install git+https://github.com/timvieira/arsenal.git 
+```
+
+## Commands to reproduce results in our paper:
+
+```$ cd src```
 
 ### marsrover 4x4
-- `python -u run.py --alg lagr_posterior posterior_transitions cucrl_pessimistic cucrl_optimistic --env gridworld --rounds 9000 --num_runs 100 --bonus_coef 0.01 --horizon 20`
-- `python -u run.py --alg cucrl_transitions --env gridworld --rounds 9000 --num_runs 30 --bonus_coef 0.01 --horizon 20`
+```$ python -u run.py --alg cucrl_transitions posterior_transitions cucrl_pessimistic cucrl_optimistic --env gridworld --rounds 9000 --num_runs 100 --bonus_coef 0.1```
+
 
 ### marsrover 8x8
-- `python -u run.py --alg lagr_posterior posterior_transitions cucrl_pessimistic cucrl_optimistic --env marsrover_gridworld --rounds 200000 --num_runs 30 --bonus_coef 0.01 --horizon 1000`
+```$ python -u run.py --alg posterior_transitions cucrl_pessimistic cucrl_optimistic --env marsrover_gridworld --rounds 50000 --num_runs 30 --bonus_coef 0.1```
 
 ### box 4x4
-- `python -u run.py --alg lagr_posterior posterior_transitions cucrl_pessimistic cucrl_optimistic --env box_gridworld --rounds 2000000 --num_runs 30 --bonus_coef 0.5 --horizon 1000`
+```$ python -u run.py --alg posterior_transitions cucrl_pessimistic cucrl_optimistic --env box_gridworld --rounds 500000 --num_runs 30 --bonus_coef 0.1```
 
 
 # Paper
