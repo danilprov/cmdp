@@ -112,7 +112,7 @@ if __name__ == '__main__':
     lin_opt = LinProgSolver(M)
     pi_list = lin_opt()
 
-    # for ploting environments
+    # plot Box
     states_ = np.array(list(map(Si.lookup, range(121))))
     box_states = [np.array([2, 2]), np.array([2, 3]), np.array([3, 2])]
     for box_state in box_states:
@@ -123,6 +123,14 @@ if __name__ == '__main__':
             s = Si.lookup(s_num)
             grid_policy[(s[0], s[1])] = pi_list[s_num]
         gridworld.showLearning(grid_policy, box_position=box_state, path = path + '/log')
+
+    # plot Marsrover 8x8
+    # states_ = range(64)
+    # grid_policy = {}
+    # for s_num in states_:
+    #     s = Si.lookup(s_num)
+    #     grid_policy[(s[0], s[1])] = pi_list[s_num]
+    # gridworld.showLearning(grid_policy)
 
     value = lin_opt.monte_carlo_evaluation(pi_list)
     print('a')
