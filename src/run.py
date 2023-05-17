@@ -57,7 +57,7 @@ def main():
         args.horizon = 200
         G = GridWorld(args=args)
     elif args.env == 'box_gridworld':
-        budget = [0.2]
+        budget = [0.6]
         args._lambda_lr = 0.000165
         args.horizon = 1000
         G = BoxGridWorld(args=args)
@@ -73,7 +73,7 @@ def main():
 
     now = datetime.now()
     date = now.strftime("%Y%m%d%H%M%S")
-    model_dir = f'{args.output_dir}/{date}_{args.env}_{args.map}_{args.rounds}'
+    model_dir = f'{args.output_dir}/{date}_{args.env}_{args.map}_{args.rounds}_{args.bonus_coef}'
     # model_dir = f'{args.output_dir}/{date}_{args.env}_{args.map}_{args.rounds}'
     if not os.path.exists(model_dir):
         print(f'Creating a new model directory: {model_dir}')

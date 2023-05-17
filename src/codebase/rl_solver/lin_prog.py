@@ -44,10 +44,10 @@ class LinProgSolver(RLSolver):
             cons_opt_prob += lpSum([mu[s, a] for a in self.Actions]) <= lpSum(
                 [mu[ss, aa] * P[ss, aa, s] for ss, aa in itertools.product(self.States, self.Actions)])
 
-        #cons_opt_prob.solve(PULP_CBC_CMD(msg=0))
-        cons_opt_prob.solve()
+        cons_opt_prob.solve(PULP_CBC_CMD(msg=0))
+        #cons_opt_prob.solve()
         # The status of the solution is printed to the screen
-        print("Status:", LpStatus[cons_opt_prob.status])
+        #print("Status:", LpStatus[cons_opt_prob.status])
         pi_list = self.__get_pi_list__(cons_opt_prob)
         return pi_list
 
@@ -64,7 +64,7 @@ class LinProgSolver(RLSolver):
             pi_list[s, :] = mu_sa / mu_s
 
         # replace nan with 1/|A|, otherwise sample(polisy(s,:)) always returns 0 action
-        # pi_list[np.isnan(pi_list)] = 1 / self.A
+        pi_list[np.isnan(pi_list)] = 1 / self.A
 
         return pi_list
 
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     lin_opt = LinProgSolver(M)
     pi_list = lin_opt()
 
-    # for ploting environments
+    # plot Box
     states_ = np.array(list(map(Si.lookup, range(121))))
     box_states = [np.array([2, 2]), np.array([2, 3]), np.array([3, 2])]
     for box_state in box_states:
@@ -123,6 +123,14 @@ if __name__ == '__main__':
             s = Si.lookup(s_num)
             grid_policy[(s[0], s[1])] = pi_list[s_num]
         gridworld.showLearning(grid_policy, box_position=box_state, path = path + '/log')
+
+    # plot Marsrover 8x8
+    # states_ = range(64)
+    # grid_policy = {}
+    # for s_num in states_:
+    #     s = Si.lookup(s_num)
+    #     grid_policy[(s[0], s[1])] = pi_list[s_num]
+    # gridworld.showLearning(grid_policy)
 
     value = lin_opt.monte_carlo_evaluation(pi_list)
     print('a')
