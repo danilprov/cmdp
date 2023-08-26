@@ -49,7 +49,7 @@ def compute_regret(rolling_results, opt_reward, opt_cost):
     return mean_main_regret, std_main_regret, mean_aux_regret, std_aux_regret
 
 
-path = './log/'
+path = '../log/to_plot/'
 list_of_folders = glob.glob(path + '*')
 list_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
                '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']

@@ -52,7 +52,7 @@ def main():
         G = GridWorld(args=args)
     elif args.env == 'marsrover_gridworld':
         budget = [0.1]
-        args.horizon = 200
+        args.horizon = 20
         G = GridWorld(args=args)
     elif args.env == 'box_gridworld':
         budget = [0.6]
