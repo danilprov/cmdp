@@ -1,4 +1,5 @@
 /venv
-/src/log
+/log
 /src/.idea
 /.idea
+.DS_store
