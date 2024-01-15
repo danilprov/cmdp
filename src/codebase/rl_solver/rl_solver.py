@@ -63,6 +63,7 @@ class RLSolver:
                 a = sample(π_list[s, :])
 
             s_next = sample(P[s, a, :])
+            print(self.Si.lookup(s), a, self.Si.lookup(s_next))
             p_traj[s, a, s_next] += 1.0
             r_traj[s, a] += R[s, a]
             c_traj[:, s, a] += C[:, s, a]

@@ -1,5 +1,14 @@
 # Provably Efficient Exploration in Constrained Reinforcement Learning: Posterior Sampling Is All You Need
 
+```
+rm -r venv
+python3 -m venv venv
+source venv/bin/activate 
+pip3 install -r requirements.txt 
+pip3 install git+https://github.com/timvieira/arsenal.git 
+```
+
+
 ## Commands to reproduce results in our paper:
 
 ```$ cd src```

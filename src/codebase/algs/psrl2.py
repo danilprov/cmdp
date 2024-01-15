@@ -11,6 +11,7 @@ class PSRLOptimistic(BaseAlgorithm):
         self.k = 1  # episode number
         self.t = 1  # round number
         self.last_state = None
+        self.known_rewards = True
         self.visitation_sum += 1
 
         try:
@@ -112,20 +113,37 @@ class PSRLTransitions(PSRLOptimistic):
 
     def get_policy(self):
         p_hat = np.zeros((self.num_states, self.num_actions, self.num_states))
-        r_hat = np.zeros((self.num_states, self.num_actions))
-        c_hat = np.zeros((self.M.d, self.num_states, self.num_actions))
+        if self.known_rewards:
+            r_hat = np.einsum('sap,sap->sa', self.M.P, self.M.R) if len(self.M.R.shape) == 3 else self.M.R
+            c_hat = np.einsum('sap,dsap->dsa', self.M.P, self.M.C) if len(self.M.C.shape) == 4 else self.M.C
+        else:
+            r_hat = np.zeros((self.num_states, self.num_actions))
+            c_hat = np.zeros((self.M.d, self.num_states, self.num_actions))
 
         for s in range(self.num_states):
             for a in range(self.num_actions):
                 visitation = self.p_sum[s, a, :].sum()
                 # sample transitions
-                p_hat[s, a, :] = np.random.dirichlet(np.maximum(self.p_sum[s, a, :], 0.001))
+                p_hat[s, a, :] = np.random.dirichlet(np.maximum(self.p_sum[s, a, :], 1))
                 # average reward and costs
-                if visitation > 0:
+                if visitation > 0 and self.known_rewards is False:
                     r_hat[s, a] = self.r_sum[s, a] / visitation
                     c_hat[:, s, a] = self.c_sum[:, s, a] / visitation
 
         π_list = self.planner(p_hat, r_hat, c_hat)
+
+        grid_index = map(self.M.Si.lookup, range(len(self.M.Si)))
+        grid_policy = dict(zip(grid_index, π_list))
+        for r in range(1, 5):
+            action_list = []
+            for c in range(1, 5):
+                s = (r, c)
+                if len(set(grid_policy[s])) == 1:
+                    action_list.append('*')
+                    continue
+                bestA = np.argmax(grid_policy[s])
+                action_list.append(self.M.Ai.lookup(bestA))
+            print([i for i in action_list])
 
         return π_list
 

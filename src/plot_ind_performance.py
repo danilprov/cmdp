@@ -4,9 +4,12 @@ import os
 import ntpath
 import pickle
 
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
-from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+#from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 
 def path_leaf(path):
     head, tail = ntpath.split(path)
@@ -49,7 +52,7 @@ def compute_regret(rolling_results, opt_reward, opt_cost):
     return mean_main_regret, std_main_regret, mean_aux_regret, std_aux_regret
 
 
-path = '../log/to_plot/'
+path = './log/'#'../log/to_plot/'
 list_of_folders = glob.glob(path + '*')
 list_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
                '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
@@ -89,7 +92,7 @@ else:
     opt_reward = -0.775
     safe_reward = -0.875
     fast_reward = -0.75
-    opt_cost = 0.2
+    opt_cost = 0.01
 
     XMAX = 8000
     n_average = 1000

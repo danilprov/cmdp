@@ -78,7 +78,7 @@ def main():
         args.initial_states = G.initial_states
         d = len(budget)
         args.d = d
-        env = FiniteHorizonCMDP(*mdp_values, d, budget, G.H, Si, G.terminals)
+        env = FiniteHorizonCMDP(*mdp_values, d, budget, G.H, Si, Ai, G.terminals)
 
         for alg_name in args.algs:
             if alg_name == 'posterior_transitions':

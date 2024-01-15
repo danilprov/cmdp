@@ -64,14 +64,15 @@ def random_MDP(S, A, gamma=0.95, d=2, b=None, r=None):
         budget=budget,
         terminals=None,
         H=100,
-        Si=Alphabet()
+        Si=Alphabet(),
+        Ai=Alphabet()
     )
 
     return M
 
 
 class CMDP(object):
-    def __init__(self, s0, P, R, C, d, budget, Si, terminals):
+    def __init__(self, s0, P, R, C, d, budget, Si, Ai, terminals):
         # P: Probability distribution p(S' | A S) stored as an array S x A x S'
         # R: Reward function r(S, A, S) -> Reals stored as an array S x A x S'
         # s0: Distribution over the initial state.
@@ -88,6 +89,7 @@ class CMDP(object):
         # budget of constraints in shape (d)
         self.budget = budget
         self.Si = Si
+        self.Ai = Ai
 
         self.terminals = terminals
 
@@ -95,8 +97,8 @@ class CMDP(object):
 class FiniteHorizonCMDP(CMDP):
     """Finite-horizon MDP."""
 
-    def __init__(self, s0, P, R, C, d, budget, H, Si, terminals):
-        super(FiniteHorizonCMDP, self).__init__(s0, P, R, C, d, budget, Si, terminals)
+    def __init__(self, s0, P, R, C, d, budget, H, Si, Ai, terminals):
+        super(FiniteHorizonCMDP, self).__init__(s0, P, R, C, d, budget, Si, Ai, terminals)
         self.H = H
 
 
@@ -151,11 +153,12 @@ class DiscountedMDP(CMDP):
     "γ-discounted, infinite-horizon Markov decision process."
 
     # def __init__(self, s0, P, R, C, Si, gamma=None):
-    def __init__(self, s0, P, R, C, d, budget, H, Si, terminals, gamma=None):
+    def __init__(self, s0, P, R, C, d, budget, H, Si, Ai, terminals, gamma=None):
         # γ: Temporal discount factor
-        super(DiscountedMDP, self).__init__(s0, P, R, C, d, budget, Si, terminals)
+        super(DiscountedMDP, self).__init__(s0, P, R, C, d, budget, Si, Ai, terminals)
         self.gamma = gamma
         self.Si = Si
+        self.Ai = Ai
         self.H = H
 
     def run(self, learner):

@@ -48,7 +48,7 @@ def train(alg, args):
 def main():
     if args.env == 'gridworld':
         args.horizon = 20
-        budget = [0.2]
+        budget = [0.001]
         args._lambda_lr = 2.9
         G = GridWorld(args=args)
         args.bonus_coef = 0.1
@@ -72,7 +72,7 @@ def main():
     args.initial_states = G.initial_states
     d = len(budget)
     args.d = d
-    env = FiniteHorizonCMDP(*mdp_values, d, budget, G.H, Si, G.terminals)
+    env = FiniteHorizonCMDP(*mdp_values, d, budget, G.H, Si, Ai, G.terminals)
 
     now = datetime.now()
     date = now.strftime("%Y%m%d%H%M%S")

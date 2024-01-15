@@ -128,6 +128,7 @@ class GridWorld(object):
 
         for s in self.states:
             # row, col = s
+            random_move_prob = np.random.uniform(low=self.randomness, high=self.randomness + 0.2)
             si = Si[s]
 
             # P = (1 - randomness) + sum_|A| {randomness / |A|}
@@ -135,7 +136,7 @@ class GridWorld(object):
                 ai = Ai[a]
                 sp, r, c = self.simulate(s, a)
                 spi = Si[sp]
-                P[si, ai, spi] += 1 * (1 - self.randomness)
+                P[si, ai, spi] += 1 * (1 - random_move_prob)
                 R[si, ai, spi] = r
                 if self.d > 0:
                     C[:, si, ai, spi] = c
@@ -146,12 +147,7 @@ class GridWorld(object):
                     ai_r = Ai[a_r]
                     sp, r, c = self.simulate(s, a_r)
                     spi = Si[sp]
-                    P[si, ai_r, spi] += 1 * self.randomness / (len(self.A))
-                    R[si, ai_r, spi] = r
-                    if self.d > 0:
-                        C[:, si, ai_r, spi] = c
-                    else:
-                        C[si, ai_r, spi] = c
+                    P[si, ai, spi] += 1 * random_move_prob / (len(self.A))
 
         s0 = np.zeros(len(self.states))
         # s0[Si[self.initial_state]] = 1
@@ -203,7 +199,7 @@ class GridWorld(object):
             vmax=19) # self.MAX_RETURN
         plt.xticks(np.arange(self.cols) + 0.5, color='w')
         plt.yticks(np.arange(self.rows) + 0.5, color='w')
-        plt.grid(b=True, which='major', linestyle='-', alpha=0.9)
+        plt.grid(visible=True, which='major', linestyle='-', alpha=0.9)
 
         # Create quivers for each action. 4 in total
         X = np.arange(self.rows) - self.SHIFT
@@ -386,7 +382,6 @@ if __name__ == '__main__':
     random_policy = np.ones([len(Si), len(Ai)]) * 0.25
     grid_index = map(Si.lookup, range(16))
     grid_policy = dict(zip(grid_index, random_policy))
-
     gridworld.showLearning(grid_policy, path = path + '/log')
 
 
