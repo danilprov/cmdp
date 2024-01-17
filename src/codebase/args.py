@@ -9,7 +9,7 @@ def get_args(parser):
     parser.add_argument("--output_dir", type=str, default="./log")
     parser.add_argument("--env", choices=['box_gridworld', 'gridworld', 'marsrover_gridworld'], default='gridworld')
     parser.add_argument("--budget", nargs="+", type=float, default=[0.01])
-    parser.add_argument("--randomness", type=float, default=0.1)
+    parser.add_argument("--randomness", type=float, default=0)
     parser.add_argument("--num_episodes", type=int, default=10)
     parser.add_argument("--infinite", type=bool, default=True)
     parser.add_argument("--num_runs", type=int, default=10)

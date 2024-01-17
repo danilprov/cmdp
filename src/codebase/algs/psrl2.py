@@ -138,7 +138,7 @@ class PSRLTransitions(PSRLOptimistic):
             action_list = []
             for c in range(1, 5):
                 s = (r, c)
-                if len(set(grid_policy[s])) == 1:
+                if len(np.unique(grid_policy[s])) == 1:
                     action_list.append('*')
                     continue
                 bestA = np.argmax(grid_policy[s])

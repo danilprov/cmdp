@@ -48,7 +48,7 @@ def train(alg, args):
 def main():
     if args.env == 'gridworld':
         args.horizon = 20
-        budget = [0.001]
+        budget = [10]
         args._lambda_lr = 2.9
         G = GridWorld(args=args)
         args.bonus_coef = 0.1

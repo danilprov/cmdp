@@ -41,37 +41,45 @@ class LinProgSolver(RLSolver):
 
         cons_opt_prob += lpSum([mu[s, a] for s, a in itertools.product(self.States, self.Actions)]) == 1
 
-        for s in self.States:
-            cons_opt_prob += lpSum([mu[s, a] for a in self.Actions]) <= lpSum(
-                [mu[ss, aa] * P[ss, aa, s] for ss, aa in itertools.product(self.States, self.Actions)])
+        for s_next in self.States:
+            cons_opt_prob += lpSum([mu[s_next, aa] for aa in self.Actions]) == lpSum(
+                [mu[s, a] * P[s, a, s_next] for s, a in itertools.product(self.States, self.Actions)])
 
-        #cons_opt_prob.solve(PULP_CBC_CMD(msg=0))
-        cons_opt_prob.solve()
+        cons_opt_prob.solve(PULP_CBC_CMD(msg=0))
+        #cons_opt_prob.solve()
         # The status of the solution is printed to the screen
         #print("Status:", LpStatus[cons_opt_prob.status])
-        if LpStatus[cons_opt_prob.status] == 'Infeasible':
-            pi_list = np.ones([self.S, self.A]) * 0.25
-        else:
-            pi_list = self.__get_pi_list__(cons_opt_prob)
-        return pi_list
+        # if LpStatus[cons_opt_prob.status] == 'Infeasible':
+        #     pi_list = np.ones([self.S, self.A]) * 0.25
+        # else:
+        #     pi_list = self.__get_pi_list__(cons_opt_prob, P)
+        # return pi_list
+
+        return cons_opt_prob
 
 
-    def __get_pi_list__(self, solution):
+    def __get_pi_list__(self, solution, P, return_policy=True):
         varsdict = {}
         for v in solution.variables():
             varsdict[v.name] = v.varValue
 
-        pi_list = np.zeros_like(self.R)
+        pi_list = np.zeros((self.S, self.A))
         for s in self.States:
             mu_s = sum([varsdict[f'occupancy_measure_({s},_{a})'] for a in self.Actions])
+            mu_ss = sum([varsdict[f'occupancy_measure_({ss},_{a})'] * P[ss, a, s] for ss, a in
+                         itertools.product(self.States, self.Actions)])
+            #print(s, mu_s, mu_ss)
             mu_sa = np.array([varsdict[f'occupancy_measure_({s},_{a})'] for a in self.Actions])
             pi_list[s, :] = mu_sa
 
         # replace nan with 1/|A|, otherwise sample(polisy(s,:)) always returns 0 action
         # pi_list[np.isnan(pi_list)] = 1 / self.A
-        pi_list = pi_list / pi_list.sum(axis=1, keepdims=True)
-
-        return pi_list
+        if return_policy:
+            pi_list = pi_list / pi_list.sum(axis=1, keepdims=True)
+            return pi_list
+        else:
+            # return occupancy measure
+            return pi_list
 
 
 if __name__ == '__main__':
@@ -100,6 +108,16 @@ if __name__ == '__main__':
 
     grid_index = map(Si.lookup, range(len(Si)))
     grid_policy = dict(zip(grid_index, pi_list))
+    for r in range(1, 5):
+        action_list = []
+        for c in range(1, 5):
+            s = (r, c)
+            if len(np.unique(grid_policy[s])) == 1:
+                action_list.append('*')
+                continue
+            bestA = np.argmax(grid_policy[s])
+            action_list.append(Ai.lookup(bestA))
+        print([i for i in action_list])
     gridworld.showLearning(grid_policy, path = path + '/log')
 
     """

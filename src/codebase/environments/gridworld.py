@@ -5,6 +5,8 @@ Grid world environment
 import random
 import numpy as np
 import os
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from past.utils import old_div
 
@@ -128,7 +130,7 @@ class GridWorld(object):
 
         for s in self.states:
             # row, col = s
-            random_move_prob = np.random.uniform(low=self.randomness, high=self.randomness + 0.2)
+            random_move_prob = np.random.uniform(low=self.randomness, high=2*self.randomness)
             si = Si[s]
 
             # P = (1 - randomness) + sum_|A| {randomness / |A|}

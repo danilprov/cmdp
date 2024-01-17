@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import optimize
 
-from codebase.rl_solver.rl_solver import RLSolver
+from src.codebase.rl_solver.rl_solver import RLSolver
 
 
 class NonlinProgSolver(RLSolver):
@@ -97,7 +97,7 @@ class NonlinProgSolver(RLSolver):
         arguments = (R,)
 
         result = optimize.minimize(self.objective, x0, method='SLSQP', args = arguments,
-                                   bounds=bnds, constraints=cons, options={'maxiter':20})
+                                   bounds=bnds, constraints=cons, options={'maxiter':30})
         # print(result)
         if result.success:
             mu, P = self.toMuP(result.x)
@@ -118,28 +118,28 @@ class NonlinProgSolver(RLSolver):
 
 
 if __name__ == '__main__':
-    from codebase.mdp import FiniteHorizonCMDP
-    from codebase.environments.gridworld import GridWorld
+    from src.codebase.mdp import FiniteHorizonCMDP
+    from src.codebase.environments.gridworld import GridWorld
     import os
 
     path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
     d = 1
-    args = {'map': "2x3_test", 'randomness': 0.2, 'd': d, 'infinite': True, 'horizon': 100}
+    args = {'map': "4x4_gwsc", 'randomness': 0, 'd': d, 'infinite': True, 'horizon': 100}
     gridworld = GridWorld(args)
     [mdp_values, Si, Ai] = gridworld.encode()
 
     s0, P, R, C = mdp_values
     budget = [0.2]
-    M = FiniteHorizonCMDP(*mdp_values, d, budget, gridworld.H, Si, gridworld.terminals)
-    lin_opt = NonlinProgSolver(M)
+    M = FiniteHorizonCMDP(*mdp_values, d, budget, gridworld.H, Si, Ai, gridworld.terminals)
+    nonlin_opt = NonlinProgSolver(M)
 
-    pi_list = lin_opt()
+    pi_list = nonlin_opt()
 
-    value = lin_opt.monte_carlo_evaluation(pi_list)
+    value = nonlin_opt.monte_carlo_evaluation(pi_list)
     print(value)
     random_policy = np.ones_like(pi_list) * 0.25
-    value_random = lin_opt.monte_carlo_evaluation(random_policy)
+    value_random = nonlin_opt.monte_carlo_evaluation(random_policy)
 
     grid_index = map(Si.lookup, range(len(Si)))
     grid_policy = dict(zip(grid_index, pi_list))
