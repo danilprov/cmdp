@@ -81,8 +81,8 @@ elif 'marsrover' in folder:
     fast_reward = -0.92307692
     opt_cost = 0.1
 
-    XMAX = 50000
-    n_average = 2000
+    XMAX = 70000
+    n_average = 5000
     text_pos_x = 40000
     eps_shift_up = 0.004
     eps_shift_down = 0.008
@@ -92,11 +92,11 @@ else:
     opt_reward = -0.775
     safe_reward = -0.875
     fast_reward = -0.75
-    opt_cost = 0.01
+    opt_cost = 0.2
 
     XMAX = 8000
-    n_average = 1000
-    text_pos_x = 7000
+    n_average = 500
+    text_pos_x = 7500
     eps_shift_up = 0.005
     eps_shift_down = 0.023
     legend_pos = [0.48, 0.58]

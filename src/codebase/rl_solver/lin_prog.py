@@ -2,8 +2,8 @@ import numpy as np
 from pulp import *
 import itertools
 
-#from codebase.rl_solver.rl_solver import RLSolver
-from src.codebase.rl_solver.rl_solver import RLSolver
+from codebase.rl_solver.rl_solver import RLSolver
+#from src.codebase.rl_solver.rl_solver import RLSolver
 
 
 class LinProgSolver(RLSolver):
@@ -19,7 +19,7 @@ class LinProgSolver(RLSolver):
         self.States = range(self.S)
         self.Actions = range(self.A)
 
-    def __call__(self, P=None, R=None, C=None, use_constraints=True):
+    def __call__(self, P=None, R=None, C=None, use_constraints=True, return_raw_solution=False):
         R = self.R if R is None else R
         P = self.P if P is None else P
         C = self.C if C is None else C
@@ -46,17 +46,16 @@ class LinProgSolver(RLSolver):
                 [mu[s, a] * P[s, a, s_next] for s, a in itertools.product(self.States, self.Actions)])
 
         cons_opt_prob.solve(PULP_CBC_CMD(msg=0))
-        #cons_opt_prob.solve()
+        if return_raw_solution:
+            return cons_opt_prob
+
         # The status of the solution is printed to the screen
         #print("Status:", LpStatus[cons_opt_prob.status])
-        # if LpStatus[cons_opt_prob.status] == 'Infeasible':
-        #     pi_list = np.ones([self.S, self.A]) * 0.25
-        # else:
-        #     pi_list = self.__get_pi_list__(cons_opt_prob, P)
-        # return pi_list
-
-        return cons_opt_prob
-
+        if LpStatus[cons_opt_prob.status] == 'Infeasible':
+            pi_list = np.ones([self.S, self.A]) * 0.25
+        else:
+            pi_list = self.__get_pi_list__(cons_opt_prob, P, return_policy=True)
+        return pi_list
 
     def __get_pi_list__(self, solution, P, return_policy=True):
         varsdict = {}

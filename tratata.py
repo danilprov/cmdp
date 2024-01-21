@@ -37,7 +37,7 @@ true_env = FiniteHorizonCMDP(s0, true_P, R, C, d, budget, None, None, None, None
 
 # find optimal solution for true env
 lin_prog_solver = LinProgSolver(true_env)
-lin_prog_solution = lin_prog_solver()
+lin_prog_solution = lin_prog_solver(return_raw_solution=True)
 optimal_om = lin_prog_solver.__get_pi_list__(lin_prog_solution, true_P, return_policy=False)
 optimal_reward = (R * optimal_om).sum().sum()
 optimal_cost = (C[0, :, :] * optimal_om).sum().sum()

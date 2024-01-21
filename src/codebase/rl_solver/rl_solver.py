@@ -3,6 +3,25 @@ from arsenal.maths import sample
 from collections import defaultdict
 
 
+def argmax(q_values):
+    """
+    Takes in a list of q_values and returns the index of the item
+    with the highest value. Breaks ties randomly.
+    returns: int - the index of the highest value in q_values
+    """
+    top_value = float("-inf")
+    ties = []
+
+    for i in range(len(q_values)):
+        if q_values[i] > top_value:
+            ties = [i]
+            top_value = q_values[i]
+        elif q_values[i] == top_value:
+            ties.append(i)
+
+    return np.random.choice(ties)
+
+
 class RLSolver:
     def __init__(self, M=None, args=None):
         self.M = M
@@ -58,12 +77,12 @@ class RLSolver:
         for h in range(H):
             # a = sample(π_list[h,s,:])
             try:
-                a = π_list[h, s, :].argmax()
+                a = argmax(π_list[h, s, :])
             except:
                 a = sample(π_list[s, :])
 
             s_next = sample(P[s, a, :])
-            print(self.Si.lookup(s), a, self.Si.lookup(s_next))
+            #print(self.Si.lookup(s), a, self.Si.lookup(s_next))
             p_traj[s, a, s_next] += 1.0
             r_traj[s, a] += R[s, a]
             c_traj[:, s, a] += C[:, s, a]

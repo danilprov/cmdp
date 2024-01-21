@@ -49,12 +49,12 @@ def compute_regret(rolling_results, opt_reward, opt_cost):
     return mean_main_regret, std_main_regret, mean_aux_regret, std_aux_regret
 
 
-path = './log/to_plot'
+path = './log/to_plot2/'
 list_of_folders = glob.glob(path + '*')
 list_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
                '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
-plot_reward = True
+plot_reward = False
 
 fig, axs = plt.subplots(2, 3, sharex='col', figsize=(15, 7))
 
@@ -83,9 +83,9 @@ for folder in list_of_folders:
         fast_reward = -0.92307692
         opt_cost = 0.1
 
-        XMAX = 20000
-        n_average = 2000
-        text_pos_x = 14000
+        XMAX = 70000
+        n_average = 100
+        text_pos_x = 64000
         eps_shift_up = 0.004
         eps_shift_down = 0.008
 
@@ -96,9 +96,9 @@ for folder in list_of_folders:
         fast_reward = -0.75
         opt_cost = 0.2
 
-        XMAX = 5000
-        n_average = 900
-        text_pos_x = 4000
+        XMAX = 8000
+        n_average = 500
+        text_pos_x = 7500
         eps_shift_up = 0.005
         eps_shift_down = 0.023
         legend_pos = [0.48, 0.58]
@@ -115,6 +115,8 @@ for folder in list_of_folders:
             alg_name = 'ConRL'
         elif 'CUCRLTransitions' in filename:
             alg_name = 'UCRL-CMDP'
+        elif 'FHA' in filename:
+            alg_name = 'FHA-Alg 3.'
         else:
             alg_name = 'PSConRL'
         rolling_results = moving_average(results, n=n_average)
@@ -205,5 +207,9 @@ for ax, row in zip(axs[:,0], rows):
     ax.set_ylabel(row, rotation=90, fontsize=12)
     ax.yaxis.label.set_size(12)
 
+if plot_reward:
+    plot_name = 'reward'
+else:
+    plot_name = 'regret'
 plt.savefig('av_reward_cost_' + plot_name + '.png', bbox_inches='tight')
 plt.show()

@@ -11,7 +11,7 @@ class PSRLOptimistic(BaseAlgorithm):
         self.k = 1  # episode number
         self.t = 1  # round number
         self.last_state = None
-        self.known_rewards = True
+        self.known_rewards = False
         self.visitation_sum += 1
 
         try:
@@ -124,7 +124,7 @@ class PSRLTransitions(PSRLOptimistic):
             for a in range(self.num_actions):
                 visitation = self.p_sum[s, a, :].sum()
                 # sample transitions
-                p_hat[s, a, :] = np.random.dirichlet(np.maximum(self.p_sum[s, a, :], 1))
+                p_hat[s, a, :] = np.random.dirichlet(np.maximum(self.p_sum[s, a, :], 0.05))
                 # average reward and costs
                 if visitation > 0 and self.known_rewards is False:
                     r_hat[s, a] = self.r_sum[s, a] / visitation
@@ -132,18 +132,18 @@ class PSRLTransitions(PSRLOptimistic):
 
         π_list = self.planner(p_hat, r_hat, c_hat)
 
-        grid_index = map(self.M.Si.lookup, range(len(self.M.Si)))
-        grid_policy = dict(zip(grid_index, π_list))
-        for r in range(1, 5):
-            action_list = []
-            for c in range(1, 5):
-                s = (r, c)
-                if len(np.unique(grid_policy[s])) == 1:
-                    action_list.append('*')
-                    continue
-                bestA = np.argmax(grid_policy[s])
-                action_list.append(self.M.Ai.lookup(bestA))
-            print([i for i in action_list])
+        # grid_index = map(self.M.Si.lookup, range(len(self.M.Si)))
+        # grid_policy = dict(zip(grid_index, π_list))
+        # for r in range(1, 5):
+        #     action_list = []
+        #     for c in range(1, 5):
+        #         s = (r, c)
+        #         if len(np.unique(grid_policy[s])) == 1:
+        #             action_list.append('*')
+        #             continue
+        #         bestA = np.argmax(grid_policy[s])
+        #         action_list.append(self.M.Ai.lookup(bestA))
+        #     print([i for i in action_list])
 
         return π_list
 

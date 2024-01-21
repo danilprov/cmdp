@@ -1,8 +1,8 @@
 def get_args(parser):
     # Generic hyperparamters
     parser.add_argument("--map", type=str, default='default')
-    parser.add_argument('-alg', '--algs', nargs='+', default=['posterior_transitions'])
-    parser.add_argument("--bonus_coef", type=float, default=0.01)
+    parser.add_argument('-alg', '--algs', nargs='+', default=['fha_cmdp'])
+    parser.add_argument("--bonus_coef", type=float, default=0.1)
     parser.add_argument("--rounds", type=int, default=11000)
     parser.add_argument("--seed", type=str, default='random')
     parser.add_argument("--solver", choices=['value_iteration', 'linear_prog'], default="value_iteration")
