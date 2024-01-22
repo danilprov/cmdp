@@ -108,20 +108,36 @@ for j, infeas_policy in enumerate(policies):
 
     print(CNTS[j])
 
-plt.plot(np.mean(REGRET[0], axis=0), label='regret_ours')
-plt.plot(np.mean(REGRET[1], axis=0), label='regret_aggrawal')
-plt.legend()
-plt.show()
+fig, axs = plt.subplots(1, 3,figsize=(10,3))
+axs[0].plot(np.mean(REGRET[1], axis=0), label='CMDP-PSRL',linestyle='-.')
+axs[0].plot(np.mean(REGRET[0], axis=0), label='PSConRL',linestyle='-.')
+axs[0].set(xlabel='rounds', ylabel='main regret')
+axs[0].legend()
 
-plt.plot(np.mean(COST[0], axis=0), label='cost_ours')
-plt.plot(np.mean(COST[1], axis=0), label='cost_aggrawal')
-plt.plot([optimal_cost] * T, label='optimal cost', ls='--')
-plt.legend()
-plt.show()
+axs[1].hlines(y=optimal_cost, xmin=0, xmax=T, colors='#7f7f7f', linestyles='--', lw=1)
+axs[1].plot(np.mean(COST[1], axis=0), label='CMDP-PSRL',linestyle='-.')
+axs[1].plot(np.mean(COST[0], axis=0), label='PSConRL',linestyle='-.')
+axs[1].set(xlabel='rounds', ylabel='average cost')
 
-plt.plot(np.mean(THETAS[0], axis=0), label='theta_hat_ours')
-plt.plot(np.mean(THETAS[1], axis=0), label='theta_hat_aggrawal')
-plt.plot([theta] * T, label='theta true', ls='--')
-plt.legend()
+axs[2].hlines(y=theta, xmin=0, xmax=T, colors='#7f7f7f', linestyles='--', lw=1)
+axs[2].plot(np.mean(THETAS[1], axis=0), label='CMDP-PSRL',linestyle='-.')
+axs[2].plot(np.mean(THETAS[0], axis=0), label='PSConRL',linestyle='-.')
+axs[2].set(xlabel='rounds', ylabel='sampled θ')
+axs[2].set_ylim(0.6, None)
+
+for ax in axs:
+    ax.grid(visible=True, which='major', linestyle='--', alpha=0.5)
+    ax.minorticks_on()
+    ax.grid(visible=True, which='minor', linestyle=':', alpha=0.2)
+
+lines_labels = ax.get_legend_handles_labels()
+#lines, labels = [sum(_, []) for _ in zip(*lines_labels)]
+lines, labels = lines_labels[0], lines_labels[1]
+# fig.legend(lines, labels,
+#            loc='upper center',
+#            bbox_to_anchor=(0.5, -0.01),
+#            fancybox=True, shadow=True, ncol=5)
+fig.tight_layout()
+plt.savefig('counterexample' + '.png', bbox_inches='tight')
 plt.show()
 print('a')
