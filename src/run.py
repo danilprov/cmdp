@@ -53,7 +53,7 @@ def main():
         budget = [0.2]
         args._lambda_lr = 2.9
         G = GridWorld(args=args)
-        #args.bonus_coef = 0.1
+        args.bonus_coef = 0.1
     elif args.env == 'marsrover_gridworld':
         budget = [0.1]
         args._lambda_lr = 0.0035

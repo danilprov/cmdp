@@ -96,13 +96,15 @@ class NonlinProgSolver(RLSolver):
 
         bnds = tuple([(0.0, 1.0) for _ in range(self.S * self.A + self.S ** 2 * self.A)])
         arguments = (R,)
-
+        print('start solving')
         result = optimize.minimize(self.objective, x0, method='SLSQP', args = arguments,
                                    bounds=bnds, constraints=cons, options={'maxiter':30})
         # print(result)
         if result.success:
+            print('success')
             mu, P = self.toMuP(result.x)
         else:
+            print('no success')
             mu = np.ones((self.S, self.A)) * 0.25
 
         return mu / mu.sum(axis=1, keepdims=True)
@@ -126,7 +128,7 @@ if __name__ == '__main__':
     path = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
     d = 1
-    args = {'map': "4x4_gwsc", 'randomness': 0, 'd': d, 'infinite': True, 'horizon': 100}
+    args = {'map': "8x8_marsrover", 'randomness': 0, 'd': d, 'infinite': True, 'horizon': 100}
     gridworld = GridWorld(args)
     [mdp_values, Si, Ai] = gridworld.encode()
 

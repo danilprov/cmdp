@@ -49,7 +49,7 @@ def compute_regret(rolling_results, opt_reward, opt_cost):
     return mean_main_regret, std_main_regret, mean_aux_regret, std_aux_regret
 
 
-path = './log/to_plot2/'
+path = 'log/to_plot_ICML/'
 list_of_folders = glob.glob(path + '*')
 list_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
                '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
@@ -83,9 +83,9 @@ for folder in list_of_folders:
         fast_reward = -0.92307692
         opt_cost = 0.1
 
-        XMAX = 70000
-        n_average = 100
-        text_pos_x = 64000
+        XMAX = 20000
+        n_average = 1000
+        text_pos_x = 14000
         eps_shift_up = 0.004
         eps_shift_down = 0.008
 
