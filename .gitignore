@@ -3,3 +3,4 @@
 /src/.idea
 /.idea
 .DS_store
+*.pyc
