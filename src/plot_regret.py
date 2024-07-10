@@ -35,7 +35,7 @@ def parse_result(results, n_average):
 
     return mean_reward, std_reward, mean_constraint, std_constraint
 
-path = './log/'
+path = './log/to_plot2/'
 list_of_folders = glob.glob(path + '*')
 latest_folder = max(list_of_folders, key=os.path.getctime)
 
@@ -75,9 +75,9 @@ else:
     fast_reward = -0.75
     opt_cost = 0.2
 
-    XMAX = 8000
-    n_average = 2000
-    text_pos_x = 7000
+    XMAX = 7000
+    n_average = 500
+    text_pos_x = 6500
     eps_shift_up = 0.005
     eps_shift_down = 0.023
     legend_pos = [0.48, 0.58]
@@ -106,8 +106,8 @@ for filename in all_files:
     #                     alpha=0.2)
     i+=1
 
-axs[1].set(xlabel='rounds', ylabel='auxiliary regert')
-axs[0].set(ylabel='main regert')
+axs[1].set(xlabel='rounds', ylabel='auxiliary regret')
+axs[0].set(ylabel='main regret')
 for ax in axs:
     ax.grid(visible=True, which='major', linestyle='--', alpha=0.5)
     ax.minorticks_on()

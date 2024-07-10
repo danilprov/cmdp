@@ -4,9 +4,12 @@ import os
 import ntpath
 import pickle
 
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
-from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+#import matplotlib.pyplot as plt
+#from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+#from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 
 def path_leaf(path):
     head, tail = ntpath.split(path)
@@ -49,7 +52,7 @@ def compute_regret(rolling_results, opt_reward, opt_cost):
     return mean_main_regret, std_main_regret, mean_aux_regret, std_aux_regret
 
 
-path = './log/'
+path = './log/'#'../log/to_plot/'
 list_of_folders = glob.glob(path + '*')
 list_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd',
                '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
@@ -78,8 +81,8 @@ elif 'marsrover' in folder:
     fast_reward = -0.92307692
     opt_cost = 0.1
 
-    XMAX = 50000
-    n_average = 2000
+    XMAX = 20000
+    n_average = 500
     text_pos_x = 40000
     eps_shift_up = 0.004
     eps_shift_down = 0.008
@@ -92,8 +95,8 @@ else:
     opt_cost = 0.2
 
     XMAX = 8000
-    n_average = 1000
-    text_pos_x = 7000
+    n_average = 500
+    text_pos_x = 7500
     eps_shift_up = 0.005
     eps_shift_down = 0.023
     legend_pos = [0.48, 0.58]

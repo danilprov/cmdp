@@ -9,11 +9,13 @@ import numpy as np
 
 from codebase.algs.psrl2 import PSRLOptimistic, PSRLTransitions, PSRLLagrangian, CUCRLOptimistic
 from codebase.algs.c_ucrl2 import CUCRLConservative, CUCRLOptimistic2, CUCRLTransitions
+from codebase.algs.fha_cmdp import FHA
 from codebase.environments.gridworld import GridWorld
 from codebase.environments.box_gridworld import BoxGridWorld
 from codebase.mdp import FiniteHorizonCMDP
 from codebase.rl_solver.lin_prog import LinProgSolver
 from codebase.rl_solver.nonlin_prog import NonlinProgSolver
+from codebase.rl_solver.lin_prog_extended import LinProgSolverExtnded
 from codebase.rl_solver.planner import ValueIteration, RelativeValueIteration
 from codebase.args import get_args
 
@@ -47,20 +49,23 @@ def train(alg, args):
 
 def main():
     if args.env == 'gridworld':
-        args.horizon = 20
+        args.horizon = 50
         budget = [0.2]
         args._lambda_lr = 2.9
         G = GridWorld(args=args)
+        args.bonus_coef = 0.1
     elif args.env == 'marsrover_gridworld':
         budget = [0.1]
         args._lambda_lr = 0.0035
-        args.horizon = 200
+        args.horizon = 120#200
         G = GridWorld(args=args)
+        args.bonus_coef = 0.1
     elif args.env == 'box_gridworld':
         budget = [0.6]
         args._lambda_lr = 0.000165
         args.horizon = 1000
         G = BoxGridWorld(args=args)
+        args.bonus_coef = 0.5
 
     [mdp_values, Si, Ai] = G.encode()  # [MDP, State-lookups, Action-lookups]
     args.num_states = G.num_states
@@ -69,7 +74,7 @@ def main():
     args.initial_states = G.initial_states
     d = len(budget)
     args.d = d
-    env = FiniteHorizonCMDP(*mdp_values, d, budget, G.H, Si, G.terminals)
+    env = FiniteHorizonCMDP(*mdp_values, d, budget, G.H, Si, Ai, G.terminals)
 
     now = datetime.now()
     date = now.strftime("%Y%m%d%H%M%S")
@@ -101,6 +106,9 @@ def main():
         elif alg_name == 'lagr_posterior':
             planner = RelativeValueIteration(M=env, args=args)
             alg = PSRLLagrangian(G=G, M=env, args=args, planner=planner)
+        elif alg_name == 'fha_cmdp':
+            planner = LinProgSolverExtnded(M=env, args=args)
+            alg = FHA(G=G, M=env, args=args, planner=planner)
 
         print(f'Running an experiment for algorithm: {alg_name}')
         results = train(alg, args)
@@ -113,14 +121,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-# gridworld marsrover 4x4
-# python -u run.py --alg posterior_rewards posterior_transitions cucrl_optimistic2 cucrl_optimistic cucrl_conservative lagr_posterior --env gridworld --rounds 9000 --num_runs 100
-
-# gridworld marsrover 8x8
-# python -u run.py --alg posterior_rewards posterior_transitions cucrl_optimistic2 cucrl_optimistic cucrl_conservative lagr_posterior --env marsrover_gridworld --rounds 200000 --num_runs 30
-
-# gridworld box 4x4
-# python -u run.py --alg posterior_rewards posterior_transitions cucrl_optimistic2 cucrl_optimistic cucrl_conservative lagr_posterior --env box_gridworld --rounds 2000000 --num_runs 30
-
 
